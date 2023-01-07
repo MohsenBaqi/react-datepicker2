@@ -554,4 +554,100 @@ button[disabled]:hover {
   cursor: not-allowed;
   background-color: #ebebeb;
 }
+
+/* schedule mode */
+.schedule.calendarContainer {
+  width: 100%;
+}
+
+.schedule.calendarContainer .dayPickerContainer {
+  border: 1px solid #eaecf0;
+  border-width: 0 0 1px 1px;
+}
+
+.schedule.calendarContainer .dayPickerContainer .dayWrapper {
+  margin: 0;
+  border: 1px solid #eaecf0;
+  border-width: 1px 1px 0 0;
+  position: relative;
+}
+
+.schedule.calendarContainer .dayPickerContainer .dayWrapper button.day-button {
+  width: 100%;
+  border-radius: 0;
+  height: 0;
+  padding-top: 100%;
+  position: relative;
+}
+
+.schedule.calendarContainer .dayPickerContainer .dayWrapper button.day-button .day-number {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  margin: 5px;
+  width: 25px;
+  height: 25px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border-radius: 50%;
+}
+
+.schedule.calendarContainer .dayPickerContainer .dayWrapper button.day-button ul.notes {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  font-size: 12px;
+  list-style: none;
+  margin: 0;
+  width: 100%;
+  text-align: start;
+  padding: 0 6px;
+}
+
+.schedule.calendarContainer .dayPickerContainer .dayWrapper button.day-button ul.notes li::before {
+  content: '';
+  /* Add content: \2022 is the CSS Code/unicode for a bullet */
+  background-color: #12b76a;
+  /* Change the color */
+  font-weight: bold;
+  /* If you want it to be bold */
+  display: inline-block;
+  /* Needed to add space between the bullet and the text */
+  width: 8px;
+  /* Also needed for space (tweak if needed) */
+  height: 8px;
+  border-radius: 50%;
+  font-size: 20px;
+  margin: 0 8px;
+}
+
+.schedule.calendarContainer .dayPickerContainer .dayWrapper .highLightDot-container {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.schedule.calendarContainer .selected button.day-button,
+.schedule.calendarContainer .selected button.day-button:hover :not([disabled]),
+.schedule.calendarContainer .selected button.day-button:active,
+.schedule.calendarContainer .selected button.day-button:focus {
+  background-color: unset;
+  color: unset;
+}
+
+.schedule.calendarContainer .selected button.day-button .day-number,
+.schedule.calendarContainer .selected button.day-button:hover :not([disabled]) .day-number,
+.schedule.calendarContainer .selected button.day-button:active .day-number,
+.schedule.calendarContainer .selected button.day-button:focus .day-number {
+  background-color: #4285f4 !important;
+  color: #ffffff !important;
+}
 /*# sourceMappingURL=style.css.map */
