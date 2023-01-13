@@ -42,6 +42,7 @@ export default class DatePicker extends Component {
     persianDigits: PropTypes.bool,
     setTodayOnBlur: PropTypes.bool,
     disableYearSelector: PropTypes.bool,
+    schedule: PropTypes.array,
   };
 
   static defaultProps = {
@@ -76,7 +77,7 @@ export default class DatePicker extends Component {
       isGregorian: this.props.isGregorian,
       timePicker: this.props.timePicker,
       timePickerComponent: this.props.timePicker ? MyTimePicker : undefined,
-      setTodayOnBlur: this.props.setTodayOnBlur
+      setTodayOnBlur: this.props.setTodayOnBlur,
     };
   }
 
@@ -97,7 +98,7 @@ export default class DatePicker extends Component {
       : inputValue.locale('fa').format(inputJalaaliFormat);
   }
 
-  setOpen = isOpen => {
+  setOpen = (isOpen) => {
     this.setState({ isOpen });
 
     if (this.props.onOpen) {
@@ -112,22 +113,20 @@ export default class DatePicker extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-
     if ('value' in nextProps) {
       if (nextProps.value === null) {
         this.setState({
           input: '',
           inputValue: '',
-          momentValue: null
+          momentValue: null,
         });
-      }
-      else if ((typeof nextProps.value === 'undefined' && typeof this.props.value !== 'undefined') ||
+      } else if (
+        (typeof nextProps.value === 'undefined' && typeof this.props.value !== 'undefined') ||
         (typeof nextProps.value !== 'undefined' && !nextProps.value.isSame(this.props.value))
       ) {
         this.setMomentValue(nextProps.value);
       }
     }
-
 
     if ('isGregorian' in nextProps && nextProps.isGregorian !== this.props.isGregorian) {
       const { inputFormat: nextPropsInputFormat } = nextProps;
@@ -137,14 +136,14 @@ export default class DatePicker extends Component {
         isGregorian: nextProps.isGregorian,
         inputValue: this.getValue(nextProps.value, nextProps.isGregorian, nextProps.timePicker),
         inputFormat: nextPropsInputFormat || this.state.inputFormat,
-        inputJalaaliFormat: nextPropsInputJalaaliFormat || this.state.inputJalaaliFormat
+        inputJalaaliFormat: nextPropsInputJalaaliFormat || this.state.inputJalaaliFormat,
       });
     }
 
     if ('timePicker' in nextProps && nextProps.timePicker !== this.props.timePicker) {
       this.setState({
         timePicker: nextProps.timePicker,
-        timePickerComponent: this.props.timePicker ? MyTimePicker : undefined
+        timePickerComponent: this.props.timePicker ? MyTimePicker : undefined,
       });
     }
 
@@ -161,7 +160,7 @@ export default class DatePicker extends Component {
     const { inputJalaaliFormat: nextPropsInputJalaaliFormat } = this.props;
     this.setState({
       isGregorian: isGregorian,
-      inputValue: this.getValue(this.props.value, isGregorian, this.props.timePicker)
+      inputValue: this.getValue(this.props.value, isGregorian, this.props.timePicker),
     });
   };
 
@@ -215,7 +214,7 @@ export default class DatePicker extends Component {
       momentValue = momentValue.set({
         hour: oldValue.hours(),
         minute: oldValue.minutes(),
-        second: oldValue.seconds()
+        second: oldValue.seconds(),
       });
     }
     this.setOpen(false);
@@ -248,8 +247,7 @@ export default class DatePicker extends Component {
 
   hanldeBlur(event) {
     if (this.props.onChange) {
-      if (!event.target.value && this.state.setTodayOnBlur === false)
-        return;
+      if (!event.target.value && this.state.setTodayOnBlur === false) return;
 
       const { inputFormat, inputJalaaliFormat, isGregorian } = this.state;
       const inputValue = this.toEnglishDigits(event.target.value);
@@ -270,11 +268,11 @@ export default class DatePicker extends Component {
     }
   }
 
-  renderInput = ref => {
+  renderInput = (ref) => {
     const { isOpen, inputValue, isGregorian } = this.state;
 
     const className = classnames(this.props.className, {
-      [outsideClickIgnoreClass]: isOpen
+      [outsideClickIgnoreClass]: isOpen,
     });
 
     return (
@@ -284,7 +282,7 @@ export default class DatePicker extends Component {
           name={this.props.name}
           className={`datepicker-input ${className}`}
           type="text"
-          ref={inst => {
+          ref={(inst) => {
             this.input = inst;
           }}
           onFocus={this.handleFocus.bind(this)}
@@ -301,7 +299,7 @@ export default class DatePicker extends Component {
     );
   };
 
-  renderCalendar = ref => {
+  renderCalendar = (ref) => {
     const { momentValue, isGregorian, timePickerComponent: TimePicker } = this.state;
     const {
       onChange,
@@ -313,6 +311,7 @@ export default class DatePicker extends Component {
       calendarContainerProps,
       ranges,
       disableYearSelector,
+      schedule,
     } = this.props;
 
     return (
@@ -348,6 +347,7 @@ export default class DatePicker extends Component {
               />
             ) : null
           }
+          schedule={schedule}
         />
       </div>
     );
@@ -361,7 +361,7 @@ export default class DatePicker extends Component {
     this.setState({
       input: '',
       inputValue: '',
-      momentValue: null
+      momentValue: null,
     });
   }
 
@@ -370,20 +370,20 @@ export default class DatePicker extends Component {
 
     return (
       <TetherComponent
-        ref={tether => (this.tether = tether)}
+        ref={(tether) => (this.tether = tether)}
         attachment={this.props.tetherAttachment ? this.props.tetherAttachment : 'top center'}
         constraints={[
           {
             to: 'window',
-            attachment: 'together'
-          }
+            attachment: 'together',
+          },
         ]}
         offset="-10px -10px"
         onResize={() => this.tether && this.tether.position()}
         /* renderTarget: This is what the item will be tethered to, make sure to attach the ref */
-        renderTarget={ref => this.renderInput(ref)}
+        renderTarget={(ref) => this.renderInput(ref)}
         /* renderElement: If present, this item will be tethered to the the component returned by renderTarget */
-        renderElement={ref => isOpen && this.renderCalendar(ref)}
+        renderElement={(ref) => isOpen && this.renderCalendar(ref)}
       />
     );
   }

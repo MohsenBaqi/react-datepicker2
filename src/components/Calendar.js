@@ -64,6 +64,7 @@ export class Calendar extends Component {
     rangeStart: true,
     isGregorian: this.props.isGregorian,
     ranges: new RangeList(this.props.ranges),
+    schedule: this.props.schedule,
   };
 
   getChildContext() {
@@ -84,6 +85,7 @@ export class Calendar extends Component {
     min,
     isGregorian,
     ranges,
+    schedule,
   }) {
     if (typeof isGregorian !== 'undefined' && isGregorian !== this.state.isGregorian) {
       this.setState({ isGregorian });
@@ -109,6 +111,9 @@ export class Calendar extends Component {
 
     if (JSON.stringify(this.props.ranges) !== JSON.stringify(ranges)) {
       this.setState({ ranges: new RangeList(ranges) });
+    }
+    if (this.props.schedule !== schedule) {
+      this.setState({ schedule: schedule });
     }
   }
 
@@ -247,6 +252,17 @@ export class Calendar extends Component {
     );
   };
 
+  groupSchedule = (schedule) => {
+    return schedule?.length
+      ? schedule.reduce(function (r, a) {
+          r[momentJalaali(a.time).format('YYYYMMDD')] =
+            r[momentJalaali(a.time).format('YYYYMMDD')] || [];
+          r[momentJalaali(a.time).format('YYYYMMDD')].push(a.note);
+          return r;
+        }, Object.create(null))
+      : null;
+  };
+
   renderDays = () => {
     const { month, selectedDay, isGregorian, startDay, endDay } = this.state;
     const { children, min, max, styles, outsideClickIgnoreClass, schedule } = this.props;
@@ -263,15 +279,6 @@ export class Calendar extends Component {
 
     const monthFormat = isGregorian ? 'MM' : 'jMM';
     const dateFormat = isGregorian ? 'YYYYMMDD' : 'jYYYYjMMjDD';
-
-    const groupedSchedule = schedule?.length
-      ? schedule.reduce(function (r, a) {
-          r[momentJalaali(a.time).format('YYYYMMDD')] =
-            r[momentJalaali(a.time).format('YYYYMMDD')] || [];
-          r[momentJalaali(a.time).format('YYYYMMDD')].push(a.note);
-          return r;
-        }, Object.create(null))
-      : null;
 
     return (
       <div className={this.props.calendarClass}>
@@ -303,6 +310,7 @@ export class Calendar extends Component {
 
             // new method for disabling and highlighting the ranges of days
             const dayState = this.state.ranges.getDayState(day);
+            const groupedSchedule = this.groupSchedule(this.state.schedule);
 
             return (
               <Day

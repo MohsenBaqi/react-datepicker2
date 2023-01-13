@@ -927,7 +927,8 @@
         mode: 'days',
         rangeStart: true,
         isGregorian: _this.props.isGregorian,
-        ranges: new RangesList(_this.props.ranges)
+        ranges: new RangesList(_this.props.ranges),
+        schedule: _this.props.schedule
       });
       _defineProperty(_assertThisInitialized(_this), "setMode", function (mode) {
         _this.setState({
@@ -1079,6 +1080,13 @@
           selectedMonth: month
         });
       });
+      _defineProperty(_assertThisInitialized(_this), "groupSchedule", function (schedule) {
+        return schedule !== null && schedule !== void 0 && schedule.length ? schedule.reduce(function (r, a) {
+          r[momentJalaali__default["default"](a.time).format('YYYYMMDD')] = r[momentJalaali__default["default"](a.time).format('YYYYMMDD')] || [];
+          r[momentJalaali__default["default"](a.time).format('YYYYMMDD')].push(a.note);
+          return r;
+        }, Object.create(null)) : null;
+      });
       _defineProperty(_assertThisInitialized(_this), "renderDays", function () {
         var _this$state5 = _this.state,
           month = _this$state5.month,
@@ -1092,7 +1100,7 @@
           max = _this$props3.max,
           styles = _this$props3.styles;
           _this$props3.outsideClickIgnoreClass;
-          var schedule = _this$props3.schedule;
+          _this$props3.schedule;
         var days;
         if (_this.lastRenderedMonth === month) {
           days = _this.days;
@@ -1103,11 +1111,6 @@
         }
         var monthFormat = isGregorian ? 'MM' : 'jMM';
         var dateFormat = isGregorian ? 'YYYYMMDD' : 'jYYYYjMMjDD';
-        var groupedSchedule = schedule !== null && schedule !== void 0 && schedule.length ? schedule.reduce(function (r, a) {
-          r[momentJalaali__default["default"](a.time).format('YYYYMMDD')] = r[momentJalaali__default["default"](a.time).format('YYYYMMDD')] || [];
-          r[momentJalaali__default["default"](a.time).format('YYYYMMDD')].push(a.note);
-          return r;
-        }, Object.create(null)) : null;
         return /*#__PURE__*/React__default["default"].createElement("div", {
           className: _this.props.calendarClass
         }, children, /*#__PURE__*/React__default["default"].createElement(Heading, {
@@ -1134,6 +1137,7 @@
 
           // new method for disabling and highlighting the ranges of days
           var dayState = _this.state.ranges.getDayState(day);
+          var groupedSchedule = _this.groupSchedule(_this.state.schedule);
           return /*#__PURE__*/React__default["default"].createElement(Day, {
             isGregorian: isGregorian,
             key: key,
@@ -1175,7 +1179,8 @@
           defaultMonth = _ref.defaultMonth,
           min = _ref.min,
           isGregorian = _ref.isGregorian,
-          ranges = _ref.ranges;
+          ranges = _ref.ranges,
+          schedule = _ref.schedule;
         if (typeof isGregorian !== 'undefined' && isGregorian !== this.state.isGregorian) {
           this.setState({
             isGregorian: isGregorian
@@ -1193,6 +1198,11 @@
         if (JSON.stringify(this.props.ranges) !== JSON.stringify(ranges)) {
           this.setState({
             ranges: new RangesList(ranges)
+          });
+        }
+        if (this.props.schedule !== schedule) {
+          this.setState({
+            schedule: schedule
           });
         }
       }
@@ -2441,7 +2451,8 @@
           styles = _this$props.styles,
           calendarContainerProps = _this$props.calendarContainerProps,
           ranges = _this$props.ranges,
-          disableYearSelector = _this$props.disableYearSelector;
+          disableYearSelector = _this$props.disableYearSelector,
+          schedule = _this$props.schedule;
         return /*#__PURE__*/React__default["default"].createElement("div", {
           ref: ref
         }, /*#__PURE__*/React__default["default"].createElement(Calendar$1, {
@@ -2470,7 +2481,8 @@
             max: max,
             momentValue: momentValue,
             setMomentValue: _this.setMomentValue.bind(_assertThisInitialized(_this))
-          }) : null
+          }) : null,
+          schedule: schedule
         }));
       });
       _this.textInput = /*#__PURE__*/React__default["default"].createRef();
@@ -2735,7 +2747,8 @@
     name: PropTypes__default["default"].string,
     persianDigits: PropTypes__default["default"].bool,
     setTodayOnBlur: PropTypes__default["default"].bool,
-    disableYearSelector: PropTypes__default["default"].bool
+    disableYearSelector: PropTypes__default["default"].bool,
+    schedule: PropTypes__default["default"].array
   });
   _defineProperty(DatePicker, "defaultProps", {
     styles: undefined,
