@@ -21,7 +21,8 @@ export default class Day extends Component {
       nextProps.isCurrentMonth !== this.props.isCurrentMonth ||
       nextProps.highlighted !== this.props.highlighted ||
       nextProps.isRangeEnd !== this.props.isRangeEnd ||
-      nextProps.isRangeStart !== this.props.isRangeStart
+      nextProps.isRangeStart !== this.props.isRangeStart ||
+      nextProps.notes !== this.props.notes
     );
   }
 
